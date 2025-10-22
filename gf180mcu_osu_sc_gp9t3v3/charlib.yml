@@ -8,10 +8,9 @@ settings:
         netlist: spice/gf180mcu_osu_sc_gp9t3v3.spice
         data_slews: [0.0706, 0.1903, 0.5123, 1.3794, 3.7140, 10]
         loads:      [0.0013, 0.0048, 0.0172, 0.0616, 0.2206, 0.7901]
+        plots: 'delay'
 cells:
     gf180mcu_osu_sc_gp9t3v3__addf_1:
-        inputs: [A, B, CI]
-        outputs: [SUM, CO]
         functions:
             - SUM=A^B^CI
             - CO=A&B | CI&(A^B)
@@ -96,44 +95,47 @@ cells:
         outputs: ['Y']
         functions: [Y=!A]
     # gf180mcu_osu_sc_gp9t3v3__decap_1:
-    # gf180mcu_osu_sc_gp9t3v3__dff_1:
-    #     inputs: [D]
-    #     outputs: [Q, QN]
-    #     functions:
-    #         - Q<=D
-    #         - QN<=!D
-    #     clock: posedge clk
-    # gf180mcu_osu_sc_gp9t3v3__dffn_1:
-    #     inputs: [D]
-    #     outputs: [Q, QN]
-    #     functions:
-    #         - Q<=D
-    #         - Q<=!D
-    #     clock: negedge clk
-    # gf180mcu_osu_sc_gp9t3v3__dffsr_1:
-    #     inputs: [D]
-    #     outputs: [Q, QN]
-    #     functions:
-    #         - Q<=D
-    #         - Q<=!D
-    #     clock: posedge clk
-    #     set: posedge S
-    #     reset: posedge R
-    #     flops: [IQ, IQN]
-    # gf180mcu_osu_sc_gp9t3v3__dlat_1:
-    #     inputs: [D]
-    #     outputs: [Q]
-    #     functions:
-    #         - Q<=D
-    #     enable: [CLK]
-    #     latches: [IQ, IQN]
-    # gf180mcu_osu_sc_gp9t3v3__dlatn_1:
-    #     inputs: [D]
-    #     outputs: [Q]
-    #     functions:
-    #         - Q<=D
-    #     enable: [!CLK]
-    #     latches: [IQ, IQN]
+    gf180mcu_osu_sc_gp9t3v3__dff_1:
+        functions:
+            - Q <= D
+            - QN <= !D
+        clock: posedge clk
+        state:
+            - IQ = Q
+            - IQN = QN
+        pairs: [Q QN]
+    gf180mcu_osu_sc_gp9t3v3__dffn_1:
+        functions:
+            - Q <= D
+            - QN <= !D
+        clock: negedge clk
+        state:
+            - IQ = Q
+            - IQN = QN
+        pairs: [Q QN]
+    gf180mcu_osu_sc_gp9t3v3__dffsr_1:
+        inputs: [D]
+        outputs: [Q, QN]
+        functions:
+            - Q <= D
+            - QN <= !D
+        clock: posedge clk
+        set: S
+        reset: R
+        state:
+            - IQ = Q
+            - IQN = QN
+        pairs: [Q QN]
+    gf180mcu_osu_sc_gp9t3v3__dlat_1:
+        functions:
+            - Q = D
+        enable: CLK
+        state: [IQ = Q]
+    gf180mcu_osu_sc_gp9t3v3__dlatn_1:
+        functions:
+            - Q = D
+        enable: not CLK
+        state: [IQ = Q]
     # gf180mcu_osu_sc_gp9t3v3__fill_1:
     # gf180mcu_osu_sc_gp9t3v3__fill_16:
     # gf180mcu_osu_sc_gp9t3v3__fill_2:
